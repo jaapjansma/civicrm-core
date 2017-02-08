@@ -325,8 +325,6 @@ class CRM_Core_Config extends CRM_Core_Config_MagicMerge {
   public static function clearDBCache() {
     $queries = array(
       'TRUNCATE TABLE civicrm_acl_cache',
-      'TRUNCATE TABLE civicrm_acl_contacts',
-      'TRUNCATE TABLE civicrm_acl_contacts_validity',
       'TRUNCATE TABLE civicrm_cache',
       'TRUNCATE TABLE civicrm_prevnext_cache',
       'UPDATE civicrm_group SET cache_date = NULL',
@@ -339,6 +337,10 @@ class CRM_Core_Config extends CRM_Core_Config_MagicMerge {
     foreach ($queries as $query) {
       CRM_Core_DAO::executeQuery($query);
     }
+
+    // Also clear the acl contact cache.
+    $aclContactCache = \Civi::service('acl_contact_cache');
+    $aclContactCache->clearCache();
 
     // also delete all the import and export temp tables
     self::clearTempTables();

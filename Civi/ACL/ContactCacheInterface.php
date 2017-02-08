@@ -77,4 +77,11 @@ interface ContactCacheInterface {
    */
   public function refreshCache($operation_type, $userId, $domainId);
 
+  /**
+   * Clear the cache.
+   *
+   * @return mixed
+   */
+  public function clearCache();
+
 }

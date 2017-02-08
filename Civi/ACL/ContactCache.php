@@ -167,6 +167,16 @@ class ContactCache implements ContactCacheInterface {
   }
 
   /**
+   * Clear the cache.
+   *
+   * @return mixed
+   */
+  public function clearCache() {
+    \CRM_Core_DAO::executeQuery("TRUNCATE civicrm_acl_contacts");
+    \CRM_Core_DAO::executeQuery("TRUNCATE civicrm_acl_contacts_validity");
+  }
+
+  /**
    * Filter a list of contact_ids by the ones that the
    *  currently active user has a permissioned relationship with
    *

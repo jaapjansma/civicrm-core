@@ -379,7 +379,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
         }
 
         $this->_aclFrom = $aclJoin;
-        $this->_aclWhere = $this->_aclWhere ? "AND {$aclWhere}" : "{$aclWhere}";
+        $this->_aclWhere = $aclWhere ? "AND {$aclWhere}" : "{$aclWhere}";
       }
       $query = "SELECT dedupe.id1 as id
                 FROM dedupe JOIN civicrm_contact ON dedupe.id1 = civicrm_contact.id {$this->_aclFrom}

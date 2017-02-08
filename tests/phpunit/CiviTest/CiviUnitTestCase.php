@@ -2975,9 +2975,8 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
       TRUNCATE civicrm_acl_cache
     ");
 
-    CRM_Core_DAO::executeQuery("
-      TRUNCATE civicrm_acl_contact_cache
-    ");
+    $aclContactCache = \Civi::service('acl_contact_cache');
+    $aclContactCache->clearCache();
 
     CRM_Core_DAO::executeQuery("
     INSERT INTO civicrm_acl_entity_role (

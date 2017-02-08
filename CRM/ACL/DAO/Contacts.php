@@ -113,11 +113,6 @@ class CRM_ACL_DAO_Contacts extends CRM_Core_DAO {
           'table_name' => 'civicrm_acl_contacts',
           'entity' => 'Contacts',
           'bao' => 'CRM_ACL_DAO_Contacts',
-          'pseudoconstant' => array(
-            'table' => 'civicrm_domain',
-            'keyColumn' => 'id',
-            'labelColumn' => 'name',
-          )
         ) ,
         'user_id' => array(
           'name' => 'user_id',
