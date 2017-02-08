@@ -843,7 +843,7 @@ SELECT g.*
       $whereClause = ' ( 0 ) ';
     }
 
-    return $whereClause;
+    return $whereClause.'';
   }
 
   /**

@@ -5,7 +5,6 @@
  *
  * This test focuses on testing the (new) ID list-based functions:
  *   CRM_Contact_BAO_Contact_Permission::allowList()
- *   CRM_Contact_BAO_Contact_Permission::relationshipList()
  * @group headless
  */
 class CRM_ACL_ListTest extends CiviUnitTestCase {
