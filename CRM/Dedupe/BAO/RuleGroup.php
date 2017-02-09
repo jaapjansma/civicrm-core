@@ -383,7 +383,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
       }
       $query = "SELECT dedupe.id1 as id
                 FROM dedupe JOIN civicrm_contact ON dedupe.id1 = civicrm_contact.id {$this->_aclFrom}
-                WHERE contact_type = '{$this->contact_type}' AND {$this->_aclWhere}
+                WHERE contact_type = '{$this->contact_type}' {$this->_aclWhere}
                 AND weight >= {$this->threshold}";
     }
     else {
