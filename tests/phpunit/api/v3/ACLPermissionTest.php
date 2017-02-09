@@ -120,6 +120,8 @@ class api_v3_ACLPermissionTest extends CiviUnitTestCase {
    */
   public function testRelatedEntityPermissions() {
     $this->createLoggedInUser();
+    $aclContactCache = \Civi::service('acl_contact_cache');
+
     $disallowedContact = $this->individualCreate(array(), 0);
     $this->allowedContactId = $this->individualCreate(array(), 1);
     $this->hookClass->setHook('civicrm_aclWhereClause', array($this, 'aclWhereOnlyOne'));
@@ -131,6 +133,7 @@ class api_v3_ACLPermissionTest extends CiviUnitTestCase {
       'Website' => array('url' => 'http://test'),
       'Address' => array('street_address' => '123 Sesame St.', 'location_type_id' => 1),
     );
+
     foreach ($testEntities as $entity => $params) {
       $params += array(
         'contact_id' => $disallowedContact,
@@ -145,6 +148,8 @@ class api_v3_ACLPermissionTest extends CiviUnitTestCase {
       // We should be allowed to create and get for contacts we do have permission on
       $params['contact_id'] = $this->allowedContactId;
       $this->callAPISuccess($entity, 'create', $params);
+      // Refresh the ACL Contact cache otherwise we might be prevented access
+      $aclContactCache->refreshCacheForCurrentUser(CRM_Core_Permission::VIEW);
       $results = $this->callAPISuccess($entity, 'get', array('contact_id' => $this->allowedContactId, 'check_permissions' => 1));
       $this->assertGreaterThan(0, $results['count']);
     }
