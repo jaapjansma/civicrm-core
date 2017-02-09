@@ -1416,10 +1416,6 @@ class CRM_Utils_System {
     $cache = CRM_Utils_Cache::singleton();
     $cache->flush();
 
-    // Also clear the acl contact cache.
-    $aclContactCache = \Civi::service('acl_contact_cache');
-    $aclContactCache->clearCache();
-
     // also reset the various static memory caches
 
     // reset the memory or array cache
