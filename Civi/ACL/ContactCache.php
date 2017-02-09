@@ -19,6 +19,17 @@ namespace Civi\ACL;
 class ContactCache implements ContactCacheInterface {
 
   /**
+   * @var int
+   *  The cache timeout in minutes.
+   * @ToDo: Get the validity period from a setting which could be set in the UI.
+   */
+  private $cacheInvalidTimeout = 180; // = 3 hours.
+
+  public function __construct() {
+
+  }
+
+  /**
    * Gets the where clause for the ACL query.
    *
    * @param int $operation_type
@@ -97,9 +108,7 @@ class ContactCache implements ContactCacheInterface {
    * @return bool
    */
   public function isCacheValid($operation_type, $userId, $domainId) {
-    // @ToDo: Get the validity period from a setting which could be set in the UI.
-    //$validityPeriod = 24 * 60; // 24 hours.
-    $validityPeriod = 0;
+    $validityPeriod = $this->cacheInvalidTimeout;
     $lastModifiedDate = new \DateTime();
     $lastModifiedDate->modify('-' . $validityPeriod . ' minutes');
     $validityParams[1] = array($userId, 'Integer');
@@ -213,7 +222,7 @@ class ContactCache implements ContactCacheInterface {
           $queries[] = "
             SELECT '{$domain_id}' as domain_id, '{$user_id}' as  user_id,  second_degree_relationship.contact_id_{$second_direction['to']} AS contact_id, '{$type}' AS operation_type
             FROM civicrm_relationship first_degree_relationship
-            LEFT JOIN civicrm_relationship second_degree_relationship ON first_degree_relationship.contact_id_{$first_direction['to']} = second_degree_relationship.contact_id_{$first_direction['from']}
+            LEFT JOIN civicrm_relationship second_degree_relationship ON first_degree_relationship.contact_id_{$first_direction['to']} = second_degree_relationship.contact_id_{$second_direction['from']}
             WHERE first_degree_relationship.contact_id_{$first_direction['from']} = {$user_id}
             AND first_degree_relationship.is_active = 1
             AND first_degree_relationship.is_permission_{$first_direction['from']}_{$first_direction['to']} = 1
@@ -222,16 +231,7 @@ class ContactCache implements ContactCacheInterface {
         }
       }
     }
-
     return $queries;
-
-    // finally UNION the queries and call
-    $query = "(" . implode(")\nUNION DISTINCT (", $queries) . ")";
-    $result = \CRM_Core_DAO::executeQuery($query);
-    while ($result->fetch()) {
-      $result_set[(int) $result->contact_id] = TRUE;
-    }
-    return array_keys($result_set);
   }
 
 }
