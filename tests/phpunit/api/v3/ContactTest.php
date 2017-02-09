@@ -80,7 +80,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       'civicrm_uf_match',
       'civicrm_phone',
       'civicrm_address',
-      'civicrm_acl_contact_cache',
       'civicrm_activity_contact',
       'civicrm_activity',
     );
