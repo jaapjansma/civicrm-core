@@ -14,7 +14,6 @@ class CRM_ACL_ListTest extends CiviUnitTestCase {
    */
   public function setUp() {
     parent::setUp();
-    // $this->quickCleanup(array('civicrm_acl_contact_cache'), TRUE);
     $this->useTransaction(TRUE);
     $this->allowedContactsACL = array();
   }
@@ -125,6 +124,10 @@ class CRM_ACL_ListTest extends CiviUnitTestCase {
     }
 
     // run this for SECOND DEGREE relations
+    // As we have updated the second degree relationship setting we should refill the AclContactCache
+    $aclContactCache = \Civi::service('acl_contact_cache');
+    $aclContactCache->refreshCacheForCurrentUser(CRM_Core_Permission::VIEW);
+
     $config->secondDegRelPermissions = TRUE;
     $this->assertTrue($config->secondDegRelPermissions);
     foreach ($permissions_to_check as $permission => $permission_label) {
