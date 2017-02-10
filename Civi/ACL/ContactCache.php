@@ -21,7 +21,6 @@ class ContactCache implements ContactCacheInterface {
   /**
    * @var int
    *  The cache timeout in minutes.
-   * @ToDo: Get the validity period from a setting which could be set in the UI.
    */
   private $cacheInvalidTimeout = 180; // = 3 hours.
 
