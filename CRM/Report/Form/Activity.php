@@ -623,14 +623,16 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     }
     $contactID = CRM_Utils_Type::escape($contactID, 'Integer');
 
-    CRM_Contact_BAO_Contact_Permission::cache($contactID);
+    CRM_ACL_BAO_Contacts::fillAclContacts(CRM_ACL_API::VIEW, $contactID);
+    $domainId = CRM_Core_Config::domainID();
     $clauses = array();
+    $fromClauses = array();
     foreach ($tableAlias as $k => $alias) {
-      $clauses[] = " INNER JOIN civicrm_acl_contact_cache aclContactCache_{$k} ON ( {$alias}.id = aclContactCache_{$k}.contact_id OR {$alias}.id IS NULL ) AND aclContactCache_{$k}.user_id = $contactID ";
+      $fromClauses[] = " LEFT JOIN civicrm_acl_contacts acl_contacts_{$k} ON {$alias}.id = acl_contacts_{$k}.contact_id";
+      $clauses[] = " (`acl_contacts_{$k}`.`operation_type` = '".CRM_ACL_API::VIEW."' AND `acl_contacts_{$k}`.`user_id` = '".$contactID."' AND `acl_contacts_{$k}`.`domain_id` = '".$domainId."')";
     }
-
-    $this->_aclFrom = implode(" ", $clauses);
-    $this->_aclWhere = NULL;
+    $this->_aclFrom = implode(" ", $fromClauses);
+    $this->_aclWhere = "(".implode(" OR ", $clauses).")";
   }
 
   /**

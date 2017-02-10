@@ -59,6 +59,8 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   public function setUp() {
     // Connect to the database.
     parent::setUp();
+    $aclContactCache = \Civi::service('acl_contact_cache');
+    $aclContactCache->clearCache();
     $this->_apiversion = 3;
     $this->_entity = 'contact';
     $this->_params = array(
@@ -87,6 +89,8 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     );
 
     $this->quickCleanup($tablesToTruncate, TRUE);
+    $aclContactCache = \Civi::service('acl_contact_cache');
+    $aclContactCache->clearCache();
   }
 
   /**

@@ -103,6 +103,8 @@ class Container {
     ))
       ->setFactoryClass('CRM_Cxn_BAO_Cxn')->setFactoryMethod('createRegistrationClient');
 
+    $container->setDefinition('acl_contact_cache', new Definition('Civi\ACL\ContactCache'));
+
     // Expose legacy singletons as services in the container.
     $singletons = array(
       'resources' => 'CRM_Core_Resources',

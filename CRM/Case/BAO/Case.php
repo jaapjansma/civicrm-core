@@ -1217,7 +1217,6 @@ SELECT case_status.label AS case_status, status_id, civicrm_case_type.title AS c
     $contactViewUrl = CRM_Utils_System::url("civicrm/contact/view",
       "reset=1&cid=", FALSE, NULL, FALSE
     );
-    $hasViewContact = CRM_Core_Permission::giveMeAllACLs();
     $clientIds = self::retrieveContactIdsByCaseId($caseID);
 
     if (!$userID) {
@@ -1241,7 +1240,7 @@ SELECT case_status.label AS case_status, status_id, civicrm_case_type.title AS c
       $values[$dao->id]['type'] = $activityTypes[$dao->type]['label'];
 
       $reporterName = $dao->reporter;
-      if ($hasViewContact) {
+      if (CRM_Contact_BAO_Contact_Permission::allow($dao->reporter_id, CRM_Core_Permission::VIEW)) {
         $reporterName = '<a href="' . $contactViewUrl . $dao->reporter_id . '">' . $dao->reporter . '</a>';
       }
       $values[$dao->id]['reporter'] = $reporterName;
@@ -1253,7 +1252,7 @@ SELECT case_status.label AS case_status, status_id, civicrm_case_type.title AS c
         }
       }
       foreach ($withContacts as $cid => $name) {
-        if ($hasViewContact) {
+        if (CRM_Contact_BAO_Contact_Permission::allow($cid, CRM_Core_Permission::VIEW)) {
           $name = '<a href="' . $contactViewUrl . $cid . '">' . $name . '</a>';
         }
         $targetContactUrls[] = $name;
@@ -1275,6 +1274,7 @@ SELECT case_status.label AS case_status, status_id, civicrm_case_type.title AS c
       if (isset($dao->assignee)) {
         if ($dao->ismultiple == 1) {
           if ($dao->reporter_id != $dao->assignee_id) {
+            $hasViewContact = CRM_Contact_BAO_Contact_Permission::allow($dao->assignee_id, CRM_Core_Permission::VIEW);
             $values[$dao->id]['reporter'] .= ($hasViewContact) ? ' / ' . "<a href='{$contactViewUrl}{$dao->assignee_id}'>$dao->assignee</a>" : ' / ' . $dao->assignee;
           }
           $values[$dao->id]['assignee'] = $dao->assignee;
@@ -2286,7 +2286,6 @@ INNER JOIN  civicrm_case_contact ON ( civicrm_case.id = civicrm_case_contact.cas
 
     $dao = CRM_Core_DAO::executeQuery($query);
     $contactViewUrl = CRM_Utils_System::url("civicrm/contact/view", "reset=1&cid=");
-    $hasViewContact = CRM_Core_Permission::giveMeAllACLs();
 
     while ($dao->fetch()) {
       $caseView = NULL;
@@ -2296,7 +2295,7 @@ INNER JOIN  civicrm_case_contact ON ( civicrm_case.id = civicrm_case_contact.cas
         $caseView = "<a class='action-item no-popup crm-hover-button' href='{$caseViewUrl}'>" . ts('View Case') . "</a>";
       }
       $clientView = $dao->client_name;
-      if ($hasViewContact) {
+      if (CRM_Contact_BAO_Contact_Permission::allow($dao->client_id, CRM_Core_Permission::VIEW)) {
         $clientView = "<a href='{$contactViewUrl}{$dao->client_id}'>$dao->client_name</a>";
       }
 

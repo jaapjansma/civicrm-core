@@ -760,7 +760,20 @@ function civicrm_api3_contact_getquick($params) {
   $limit = $limit > 0 ? $limit : CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::SEARCH_PREFERENCES_NAME, 'search_autocomplete_count', NULL, 10);
 
   // add acl clause here
-  list($aclFrom, $aclWhere) = CRM_Contact_BAO_Contact_Permission::cacheClause('cc');
+  $deleteClause = '';
+  if (!CRM_Core_Permission::check('access deleted contacts')) {
+    $deleteClause = "(cc.is_deleted = '0')";
+  }
+
+  $aclContactCache = \Civi::service('acl_contact_cache');
+  $aclWhere = $aclContactCache->getAclWhereClause(CRM_Core_Permission::VIEW, 'cc');
+  $aclFrom = $aclContactCache->getAclJoin(CRM_Core_Permission::VIEW, 'cc');
+
+  if (strlen($aclWhere) && strlen($deleteClause)) {
+    $aclWhere .= " AND " . $deleteClause;
+  } elseif (strlen($deleteClause)) {
+    $aclWhere = $deleteClause;
+  }
 
   if ($aclWhere) {
     $where .= " AND $aclWhere ";

@@ -47,7 +47,6 @@
 -- *******************************************************/
 CREATE TABLE `{$table.name}` (
 {assign var='first' value=true}
-
 {foreach from=$table.fields item=field}
 {if ! $first},{/if}
 {assign var='first' value=false}
@@ -58,8 +57,8 @@ CREATE TABLE `{$table.name}` (
 {if $table.primaryKey}
 {if ! $first},{/if}
 {assign var='first' value=false}
-
-    PRIMARY KEY ( `{$table.primaryKey.name}` )
+{assign var='firstIndexField' value=true}
+    PRIMARY KEY ({foreach from=$table.primaryKey.field item=fieldName}{if $firstIndexField}{assign var='firstIndexField' value=false}{else},{/if}`{$fieldName}`{/foreach})
 {/if} {* table.primaryKey *}
 
 {if $table.index}
