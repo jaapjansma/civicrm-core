@@ -3425,7 +3425,7 @@ LEFT JOIN civicrm_address add2 ON ( add1.master_id = add2.id )
     $aclWhere = $aclContactCache->getAclWhereClause(CRM_Core_Permission::VIEW, 'civicrm_contact');
     $aclJoin = $aclContactCache->getAclJoin(CRM_Core_Permission::VIEW, 'civicrm_contact');
     if (strlen($aclWhere)) {
-      $cacheSubQuery[] = " IN (SELECT civicrm_contact.id FROM civicrm_contact {$aclJoin} WHERE {$aclWhere}";
+      $cacheSubQuery[] = " IN (SELECT civicrm_contact.id FROM civicrm_contact {$aclJoin} WHERE {$aclWhere})";
     }
 
     $clauses = array(

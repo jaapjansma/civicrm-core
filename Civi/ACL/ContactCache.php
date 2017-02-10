@@ -26,7 +26,7 @@ class ContactCache implements ContactCacheInterface {
   private $cacheInvalidTimeout = 180; // = 3 hours.
 
   public function __construct() {
-
+    $this->cacheInvalidTimeout = \Civi::settings()->get('acl_contact_cache_validity');
   }
 
   /**
