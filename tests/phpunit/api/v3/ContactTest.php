@@ -575,7 +575,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       ),
     );
 
-    $result = $this->callAPIAndDocument('Contact', 'create', $params, __FUNCTION__, __FILE__);
+    $result = $this->callAPISuccess('Contact', 'create', $params);
     $customFldId = $result['values'][$result['id']]['api.CustomField.create']['id'];
     $this->assertNotNull($result['id']);
     $this->assertNotNull($customFldId);
@@ -586,7 +586,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       'api.CustomValue.get' => 1,
     );
 
-    $result = $this->callAPIAndDocument('Contact', 'create', $params, __FUNCTION__, __FILE__);
+    $result = $this->callAPISuccess('Contact', 'create', $params);
     $this->assertNotNull($result['id']);
     $customFldDate = date("YmdHis", strtotime($result['values'][$result['id']]['api.CustomValue.get']['values'][0]['latest']));
     $this->assertNotNull($customFldDate);
@@ -609,14 +609,14 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       ),
       'api.CustomValue.get' => 1,
     );
-    $result = $this->callAPIAndDocument('Contact', 'create', $params, __FUNCTION__, __FILE__);
+    $result = $this->callAPISuccess('Contact', 'create', $params);
     $this->assertNotNull($result['id']);
     $customFldDate = date("Ymd", strtotime($result['values'][$result['id']]['api.CustomValue.get']['values'][0]['latest']));
     $customFldTime = date("His", strtotime($result['values'][$result['id']]['api.CustomValue.get']['values'][0]['latest']));
     $this->assertNotNull($customFldDate);
     $this->assertEquals($dateTime, $customFldDate);
     $this->assertEquals(000000, $customFldTime);
-    $this->callAPIAndDocument('Contact', 'create', $params, __FUNCTION__, __FILE__);
+    $this->callAPISuccess('Contact', 'create', $params);
   }
 
 
