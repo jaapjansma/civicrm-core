@@ -390,10 +390,10 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
       $this->_aclWhere = ' AND c1.is_deleted = 0 AND c2.is_deleted = 0';
       if ($checkPermission) {
         $aclContactCache = \Civi::service('acl_contact_cache');
-        $aclWhere1 = $aclContactCache->getAclWhereClause(CRM_Core_Permission::VIEW, 'c1');
-        $this->_aclFrom = $this->_aclFrom . ' ' . $aclContactCache->getAclJoin(CRM_Core_Permission::VIEW, 'c1');
-        $aclWhere2 = $aclContactCache->getAclWhereClause(CRM_Core_Permission::VIEW, 'c2');
-        $this->_aclFrom = $this->_aclFrom . ' ' . $aclContactCache->getAclJoin(CRM_Core_Permission::VIEW, 'c2');
+        $aclWhere1 = $aclContactCache->getAclWhereClause(CRM_Core_Permission::VIEW, 'c1', 'id', 'civicrm_acl_contacts1');
+        $this->_aclFrom = $this->_aclFrom . ' ' . $aclContactCache->getAclJoin(CRM_Core_Permission::VIEW, 'c1', 'id', 'civicrm_acl_contacts1');
+        $aclWhere2 = $aclContactCache->getAclWhereClause(CRM_Core_Permission::VIEW, 'c2', 'id', 'civicrm_acl_contacts2');
+        $this->_aclFrom = $this->_aclFrom . ' ' . $aclContactCache->getAclJoin(CRM_Core_Permission::VIEW, 'c2', 'id', 'civicrm_acl_contacts2');
 
         if (strlen($aclWhere1)) {
           $this->_aclWhere .= ' AND '.$aclWhere1;

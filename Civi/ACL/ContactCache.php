@@ -38,9 +38,11 @@ class ContactCache implements ContactCacheInterface {
    *  The alias of the civicrm_contact table. - Optional default to 'civicrm_contact'
    * @param string contact_id field
    *  The field which holds the contact ID. - Optional default to 'id'
+   * @param string $acl_contact_cache_alias
+   *   The alias for the acl contact cache table
    * @return string
    */
-  public function getAclWhereClause($operation_type, $contact_table_alias='civicrm_contact', $contact_id_field='id') {
+  public function getAclWhereClause($operation_type, $contact_table_alias='civicrm_contact', $contact_id_field='id', $acl_contact_cache_alias='civicrm_acl_contacts') {
     // first see if the contact has edit / view all contacts
     if (\CRM_Core_Permission::check('edit all contacts') || ($operation_type == \CRM_Core_Permission::VIEW && \CRM_Core_Permission::check('view all contacts'))) {
       return '';
@@ -54,7 +56,7 @@ class ContactCache implements ContactCacheInterface {
       $this->refreshCache($operation_type, $contactID, $domainID);
     }
 
-    return " `civicrm_acl_contacts`.`operation_type` = '".$operation_type."' AND `civicrm_acl_contacts`.`user_id` = '".$contactID."' AND `civicrm_acl_contacts`.`domain_id` = '".$domainID."'";
+    return " `{$acl_contact_cache_alias}`.`operation_type` = '".$operation_type."' AND `{$acl_contact_cache_alias}`.`user_id` = '".$contactID."' AND `{$acl_contact_cache_alias}`.`domain_id` = '".$domainID."'";
   }
 
   /**
@@ -67,15 +69,17 @@ class ContactCache implements ContactCacheInterface {
    *  The alias of the civicrm_contact table. - Optional default to 'civicrm_contact'
    * @param string contact_id field
    *  The field which holds the contact ID. - Optional default to 'id'
+   * @param string $acl_contact_cache_alias
+   *   The alias for the acl contact cache table
    * @return string
    */
-  public function getAclJoin($operation_type, $contact_table_alias='civicrm_contact', $contact_id_field='id') {
+  public function getAclJoin($operation_type, $contact_table_alias='civicrm_contact', $contact_id_field='id', $acl_contact_cache_alias='civicrm_acl_contacts') {
     // first see if the contact has edit / view all contacts
     if (\CRM_Core_Permission::check('edit all contacts') || ($operation_type == \CRM_Core_Permission::VIEW && \CRM_Core_Permission::check('view all contacts'))) {
       return '';
     }
 
-    return "INNER JOIN `civicrm_acl_contacts` `civicrm_acl_contacts` ON `civicrm_acl_contacts`.`contact_id` = `{$contact_table_alias}`.`{$contact_id_field}`";
+    return "INNER JOIN `civicrm_acl_contacts` `{$acl_contact_cache_alias}` ON `{$acl_contact_cache_alias}`.`contact_id` = `{$contact_table_alias}`.`{$contact_id_field}`";
   }
 
   /**
